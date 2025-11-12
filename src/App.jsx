@@ -15,27 +15,42 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
+  React.useEffect(() => {
+    // Set default meta tags
+    document.title = 'Vivora Agency - وكالة فيفورا للتصميم';
+    
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta');
+      metaDescription.name = 'description';
+      metaDescription.content = 'وكالة فيفورا للتصميم - نصنع هويات بصرية مذهلة تساعد الشركات على التميز. تصميم شعارات، هويات علامات تجارية، ومواقع إلكترونية.';
+      document.head.appendChild(metaDescription);
+    }
+  }, []);
+
   return (
-    <AuthProvider>
-      <OrderProvider>
-        <Router>
-          <div className="App">
-            <Header />
-            <main>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/designers" element={<DesignerSelection />} />
-                <Route path="/project-form" element={<ProjectForm />} />
-                <Route path="/payment" element={<Payment />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/login" element={<Login />} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-        </Router>
-      </OrderProvider>
-    </AuthProvider>
+    <div dir="rtl">
+      <AuthProvider>
+        <OrderProvider>
+          <Router>
+            <div className="App">
+              <Header />
+              <main>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/designers" element={<DesignerSelection />} />
+                  <Route path="/project-form" element={<ProjectForm />} />
+                  <Route path="/payment" element={<Payment />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/login" element={<Login />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </OrderProvider>
+      </AuthProvider>
+    </div>
   );
 }
 

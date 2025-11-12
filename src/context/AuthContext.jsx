@@ -1,10 +1,8 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 
-// Create context
 const AuthContext = createContext();
 
-// Initial state
 const initialState = {
   user: null,
   token: null,
@@ -13,7 +11,6 @@ const initialState = {
   error: null
 };
 
-// Auth action types
 const AUTH_ACTION_TYPES = {
   LOGIN_START: 'LOGIN_START',
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
@@ -27,7 +24,6 @@ const AUTH_ACTION_TYPES = {
   SET_LOADING: 'SET_LOADING'
 };
 
-// Auth reducer
 const authReducer = (state, action) => {
   switch (action.type) {
     case AUTH_ACTION_TYPES.LOGIN_START:
@@ -92,11 +88,9 @@ const authReducer = (state, action) => {
   }
 };
 
-// Auth Provider Component
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Initialize auth state from localStorage
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -106,7 +100,6 @@ export const AuthProvider = ({ children }) => {
         if (token && userData) {
           const user = JSON.parse(userData);
           
-          // Verify token validity (in real app, this would be an API call)
           const isValid = await verifyToken(token);
           
           if (isValid) {
@@ -115,14 +108,13 @@ export const AuthProvider = ({ children }) => {
               payload: { user, token }
             });
           } else {
-            // Token is invalid, clear storage
             localStorage.removeItem('auth_token');
             localStorage.removeItem('user_data');
             dispatch({ type: AUTH_ACTION_TYPES.LOGOUT });
           }
         }
       } catch (error) {
-        console.error('Auth initialization error:', error);
+        console.error('خطأ في تهيئة المصادقة:', error);
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user_data');
         dispatch({ type: AUTH_ACTION_TYPES.LOGOUT });
@@ -134,29 +126,23 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  // Mock token verification
   const verifyToken = async (token) => {
-    // In a real app, this would be an API call to verify token
     return new Promise((resolve) => {
       setTimeout(() => {
-        // Simple check - in reality, you'd validate JWT or check with backend
         resolve(!!token && token.length > 10);
       }, 100);
     });
   };
 
-  // Login function
   const login = async (email, password) => {
     try {
       dispatch({ type: AUTH_ACTION_TYPES.LOGIN_START });
 
-      // Mock API call - replace with actual authentication endpoint
       const response = await mockLoginAPI(email, password);
 
       if (response.success) {
         const { user, token } = response.data;
 
-        // Store in localStorage
         localStorage.setItem('auth_token', token);
         localStorage.setItem('user_data', JSON.stringify(user));
 
@@ -167,7 +153,7 @@ export const AuthProvider = ({ children }) => {
 
         return { success: true };
       } else {
-        throw new Error(response.message || 'Login failed');
+        throw new Error(response.message || 'فشل تسجيل الدخول');
       }
     } catch (error) {
       dispatch({
@@ -179,18 +165,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register function
   const register = async (userData) => {
     try {
       dispatch({ type: AUTH_ACTION_TYPES.REGISTER_START });
 
-      // Mock API call - replace with actual registration endpoint
       const response = await mockRegisterAPI(userData);
 
       if (response.success) {
         const { user, token } = response.data;
 
-        // Store in localStorage
         localStorage.setItem('auth_token', token);
         localStorage.setItem('user_data', JSON.stringify(user));
 
@@ -201,7 +184,7 @@ export const AuthProvider = ({ children }) => {
 
         return { success: true };
       } else {
-        throw new Error(response.message || 'Registration failed');
+        throw new Error(response.message || 'فشل إنشاء الحساب');
       }
     } catch (error) {
       dispatch({
@@ -213,31 +196,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function - removed navigate from here
   const logout = () => {
-    // Clear localStorage
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user_data');
-    
-    // Clear any order-related data
     localStorage.removeItem('currentProject');
-    
     dispatch({ type: AUTH_ACTION_TYPES.LOGOUT });
-    
-    // Note: Navigation should be handled in the component that calls logout
-    // For example, in Header.jsx after logout is called
   };
 
-  // Update user profile
   const updateUser = async (userData) => {
     try {
-      // Mock API call - replace with actual update endpoint
       const response = await mockUpdateUserAPI(state.token, userData);
 
       if (response.success) {
         const updatedUser = { ...state.user, ...userData };
-        
-        // Update localStorage
         localStorage.setItem('user_data', JSON.stringify(updatedUser));
 
         dispatch({
@@ -247,42 +218,33 @@ export const AuthProvider = ({ children }) => {
 
         return { success: true };
       } else {
-        throw new Error(response.message || 'Update failed');
+        throw new Error(response.message || 'فشل التحديث');
       }
     } catch (error) {
       return { success: false, error: error.message };
     }
   };
 
-  // Clear error
   const clearError = () => {
     dispatch({ type: AUTH_ACTION_TYPES.CLEAR_ERROR });
   };
 
-  // Check if user has specific role (for future role-based access)
   const hasRole = (role) => {
     return state.user?.roles?.includes(role) || false;
   };
 
-  // Check if user can access a specific feature
   const canAccess = (permission) => {
     if (!state.isAuthenticated) return false;
-    
-    // Simple permission check - extend as needed
     const userPermissions = state.user?.permissions || [];
     return userPermissions.includes(permission);
   };
 
-  // Value to be provided by context
   const value = {
-    // State
     user: state.user,
     token: state.token,
     isAuthenticated: state.isAuthenticated,
     isLoading: state.isLoading,
     error: state.error,
-
-    // Actions
     login,
     register,
     logout,
@@ -299,11 +261,9 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Mock API functions - Replace with actual API calls
 const mockLoginAPI = async (email, password) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      // Mock validation
       if (email === 'demo@example.com' && password === 'password') {
         resolve({
           success: true,
@@ -311,9 +271,9 @@ const mockLoginAPI = async (email, password) => {
             user: {
               id: 1,
               email: 'demo@example.com',
-              name: 'Demo User',
+              name: 'مستخدم تجريبي',
               avatar: null,
-              phone: '+1234567890',
+              phone: '+٩٦٦٥٥١٢٣٤٥٦٧٨',
               createdAt: new Date().toISOString(),
               roles: ['client'],
               permissions: ['create_order', 'view_orders', 'upload_files']
@@ -324,7 +284,7 @@ const mockLoginAPI = async (email, password) => {
       } else {
         resolve({
           success: false,
-          message: 'Invalid email or password'
+          message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
         });
       }
     }, 1500);
@@ -365,18 +325,16 @@ const mockUpdateUserAPI = async (token, userData) => {
   });
 };
 
-// Custom hook to use auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('يجب استخدام useAuth داخل AuthProvider');
   }
   
   return context;
 };
 
-// Higher Order Component for protecting routes - removed useNavigate
 export const withAuth = (Component) => {
   return function ProtectedComponent(props) {
     const { isAuthenticated, isLoading } = useAuth();
@@ -384,8 +342,8 @@ export const withAuth = (Component) => {
     if (isLoading) {
       return (
         <div className="d-flex justify-content-center align-items-center min-vh-50">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
+          <div className="spinner-border primary-text" role="status">
+            <span className="visually-hidden">جاري التحميل...</span>
           </div>
         </div>
       );
@@ -397,10 +355,10 @@ export const withAuth = (Component) => {
           <div className="row justify-content-center">
             <div className="col-md-6 text-center">
               <div className="alert alert-warning">
-                <h4>Authentication Required</h4>
-                <p>Please log in to access this page.</p>
+                <h4>مصادقة مطلوبة</h4>
+                <p>يرجى تسجيل الدخول للوصول إلى هذه الصفحة.</p>
                 <a href="/login" className="btn btn-primary">
-                  Go to Login
+                  الانتقال لتسجيل الدخول
                 </a>
               </div>
             </div>
@@ -412,6 +370,3 @@ export const withAuth = (Component) => {
     return <Component {...props} />;
   };
 };
-
-// REMOVED useRequireAuth hook since it uses useNavigate
-// This should be implemented in individual components instead

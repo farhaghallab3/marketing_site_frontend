@@ -52,14 +52,12 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
   return (
     <>
       <Card className="designer-card h-100 shadow-sm position-relative">
-        {/* Rank Badge */}
         {rank <= 3 && (
           <div className={`rank-badge ${getRankBadgeClass(rank)}`}>
             #{rank}
           </div>
         )}
 
-        {/* Designer Header */}
         <Card.Header className="bg-transparent border-bottom-0 pb-0">
           <Row className="align-items-center">
             <Col xs="auto">
@@ -78,19 +76,19 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
             </Col>
             <Col>
               <div className="d-flex justify-content-between align-items-start">
-                <div>
-                  <h5 className="mb-1 fw-bold">{designer.name}</h5>
-                  <Badge bg="primary" className="specialty-tag mb-2">
-                    {designer.specialty}
-                  </Badge>
-                </div>
                 <div className="text-end">
                   <div className="rating-stars mb-1">
                     {renderStars(designer.rating)}
                   </div>
                   <small className="text-muted">
-                    {designer.rating} • {designer.experience} exp
+                    {designer.rating} • {designer.experience} خبرة
                   </small>
+                </div>
+                <div>
+                  <h5 className="mb-1 fw-bold">{designer.name}</h5>
+                  <Badge bg="primary" className="specialty-tag mb-2">
+                    {designer.specialty}
+                  </Badge>
                 </div>
               </div>
             </Col>
@@ -98,49 +96,45 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
         </Card.Header>
 
         <Card.Body className="pt-0">
-          {/* Bio */}
           <p className="text-muted mb-3 designer-bio">
             {designer.bio}
           </p>
 
-          {/* Stats */}
           <Row className="text-center mb-3 stats-row">
             <Col>
               <div className="stat-item">
                 <h6 className="fw-bold mb-1 text-primary">{designer.completedProjects || 150}+</h6>
-                <small className="text-muted">Projects</small>
+                <small className="text-muted">مشروع</small>
               </div>
             </Col>
             <Col>
               <div className="stat-item">
                 <h6 className="fw-bold mb-1 text-success">{designer.successRate || 98}%</h6>
-                <small className="text-muted">Success</small>
+                <small className="text-muted">نجاح</small>
               </div>
             </Col>
             <Col>
               <div className="stat-item">
-                <h6 className="fw-bold mb-1 text-info">{designer.responseTime || 2}h</h6>
-                <small className="text-muted">Response</small>
+                <h6 className="fw-bold mb-1 text-info">{designer.responseTime || 2}س</h6>
+                <small className="text-muted">استجابة</small>
               </div>
             </Col>
           </Row>
 
-          {/* Portfolio Preview */}
           <div className="portfolio-preview mb-3" onClick={handleViewPortfolio}>
             <div className="portfolio-count">
-              <i className="bi bi-images me-2"></i>
-              {portfolioItems.length} Portfolio Items
+              <i className="bi bi-images ms-2"></i>
+              {portfolioItems.length} عنصر في المعرض
             </div>
             <div className="portfolio-overlay">
               <Button variant="outline-light" size="sm">
-                View Gallery
+                عرض المعرض
               </Button>
             </div>
           </div>
 
-          {/* Skills */}
           <div className="skills-section mb-3">
-            <small className="text-muted d-block mb-2">Key Skills:</small>
+            <small className="text-muted d-block mb-2">المهارات الرئيسية:</small>
             <div className="d-flex flex-wrap gap-1">
               {designer.skills?.map((skill, index) => (
                 <Badge 
@@ -152,10 +146,10 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
                   {skill}
                 </Badge>
               )) || [
-                'Brand Identity',
-                'UI/UX Design',
-                'Social Media',
-                'Print Design'
+                'هوية العلامة التجارية',
+                'تصميم واجهة المستخدم',
+                'وسائل التواصل الاجتماعي',
+                'تصميم مطبوعات'
               ].map((skill, index) => (
                 <Badge 
                   key={index}
@@ -177,22 +171,21 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
               onClick={handleSelect}
               className="fw-semibold"
             >
-              <i className="bi bi-check-circle me-2"></i>
-              Select Designer
+              <i className="bi bi-check-circle ms-2"></i>
+              اختر المصمم
             </Button>
             <Button 
               variant="outline-secondary" 
               onClick={handleViewPortfolio}
               size="sm"
             >
-              <i className="bi bi-eye me-2"></i>
-              View Portfolio
+              <i className="bi bi-eye ms-2"></i>
+              عرض المعرض
             </Button>
           </div>
         </Card.Footer>
       </Card>
 
-      {/* Portfolio Modal */}
       <Modal 
         show={showModal} 
         onHide={() => setShowModal(false)}
@@ -201,11 +194,10 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {designer.name}'s Portfolio
+            معرض أعمال {designer.name}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* Portfolio Carousel */}
           <Carousel 
             activeIndex={selectedImage}
             onSelect={setSelectedImage}
@@ -216,34 +208,33 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
               <Carousel.Item key={index}>
                 <div className="portfolio-modal-image">
                   <img
-                    src={`/api/placeholder/600/400?text=Project ${index + 1}`}
-                    alt={`Portfolio item ${index + 1}`}
+                    src={`/api/placeholder/600/400?text=مشروع ${index + 1}`}
+                    alt={`عنصر المعرض ${index + 1}`}
                     className="d-block w-100 rounded"
                   />
                 </div>
                 <Carousel.Caption className="bg-dark bg-opacity-50 rounded p-2">
-                  <h6>Project {index + 1}</h6>
-                  <small>Client: {designer.clients?.[index] || 'Confidential'}</small>
+                  <h6>المشروع {index + 1}</h6>
+                  <small>العميل: {designer.clients?.[index] || 'سري'}</small>
                 </Carousel.Caption>
               </Carousel.Item>
             ))}
           </Carousel>
 
-          {/* Project Details */}
           <div className="mt-4">
-            <h6>About {designer.name}'s Work:</h6>
+            <h6>عن أعمال {designer.name}:</h6>
             <p className="text-muted">
               {designer.portfolioDescription || 
-                `Specializing in ${designer.specialty.toLowerCase()}, ${designer.name} brings ${designer.experience} of experience to create stunning visual solutions that drive results.`}
+                `متخصص في ${designer.specialty.toLowerCase()}، ${designer.name} يمتلك ${designer.experience} من الخبرة في إنشاء حلول بصرية مذهلة تحقق النتائج.`}
             </p>
             
             <Row className="mt-3">
               <Col md={6}>
-                <small className="text-muted d-block">Average Delivery Time</small>
-                <strong>{designer.deliveryTime || '5-7 business days'}</strong>
+                <small className="text-muted d-block">متوسط وقت التسليم</small>
+                <strong>{designer.deliveryTime || '٥-٧ أيام عمل'}</strong>
               </Col>
               <Col md={6}>
-                <small className="text-muted d-block">Client Satisfaction</small>
+                <small className="text-muted d-block">رضا العملاء</small>
                 <strong>{designer.successRate || 98}%</strong>
               </Col>
             </Row>
@@ -251,10 +242,10 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="outline-secondary" onClick={() => setShowModal(false)}>
-            Close
+            إغلاق
           </Button>
           <Button variant="primary" onClick={handleSelect}>
-            Select {designer.name}
+            اختر {designer.name}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -268,29 +259,14 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
 
         .designer-card:hover {
           transform: translateY(-5px);
-          border-color: #007bff;
-          box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15) !important;
-        }
-
-        .designer-avatar {
-          position: relative;
-        }
-
-        .online-indicator {
-          position: absolute;
-          bottom: 5px;
-          right: 5px;
-          width: 12px;
-          height: 12px;
-          background-color: #28a745;
-          border: 2px solid white;
-          border-radius: 50%;
+          border-color: var(--primary-color);
+          box-shadow: 0 8px 25px rgba(209, 178, 138, 0.15) !important;
         }
 
         .rank-badge {
           position: absolute;
           top: -10px;
-          left: -10px;
+          right: -10px;
           width: 40px;
           height: 40px;
           border-radius: 50%;
@@ -327,28 +303,9 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
           color: #ffc107;
         }
 
-        .designer-bio {
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          line-height: 1.4;
-        }
-
-        .stats-row {
-          background: #f8f9fa;
-          border-radius: 8px;
-          padding: 10px 0;
-          margin: 0 -10px;
-        }
-
-        .stat-item {
-          padding: 5px;
-        }
-
         .portfolio-preview {
           height: 120px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, var(--secondary-color) 0%, #1a1a1a 100%);
           border-radius: 8px;
           display: flex;
           align-items: center;
@@ -359,90 +316,6 @@ const DesignerCard = ({ designer, onSelect, rank }) => {
           overflow: hidden;
           cursor: pointer;
           transition: all 0.3s ease;
-        }
-
-        .portfolio-preview:hover {
-          transform: scale(1.02);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .portfolio-preview:hover .portfolio-overlay {
-          opacity: 1;
-        }
-
-        .portfolio-count {
-          position: relative;
-          z-index: 1;
-        }
-
-        .portfolio-overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.7);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-
-        .skill-badge {
-          border: 1px solid #dee2e6;
-          font-weight: normal;
-          padding: 0.25em 0.6em;
-        }
-
-        .portfolio-modal-image {
-          border-radius: 8px;
-          overflow: hidden;
-          background: #f8f9fa;
-          min-height: 300px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        /* Animation for card appearance */
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .designer-card {
-          animation: fadeInUp 0.5s ease-out;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-          .designer-avatar img {
-            width: 60px;
-            height: 60px;
-          }
-          
-          .portfolio-preview {
-            height: 100px;
-          }
-          
-          .stats-row {
-            padding: 8px 0;
-          }
-        }
-
-        @media (max-width: 576px) {
-          .rank-badge {
-            width: 35px;
-            height: 35px;
-            font-size: 0.9rem;
-          }
         }
       `}</style>
     </>

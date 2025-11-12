@@ -11,36 +11,38 @@ const DesignerSelection = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // In a real app, this would be an API call
+    document.title = 'اختيار المصمم - Vivora Agency';
+  }, []);
+  useEffect(() => {
     const mockDesigners = [
       {
         id: 1,
-        name: "Sarah Johnson",
-        specialty: "Brand Identity",
-        experience: "5 years",
-        bio: "Specialized in creating memorable brand identities for tech startups.",
+        name: "سارة أحمد",
+        specialty: "هوية العلامة التجارية",
+        experience: "٥ سنوات",
+        bio: "متخصصة في إنشاء هويات علامات تجارية لا تنسى للشركات الناشئة التقنية.",
         portfolio: ["project1.jpg", "project2.jpg", "project3.jpg"],
         avatar: "/avatars/sarah.jpg",
         rating: 4.9
       },
       {
         id: 2,
-        name: "Mike Chen",
-        specialty: "Social Media Graphics",
-        experience: "3 years",
-        bio: "Expert in creating engaging social media content that drives conversions.",
+        name: "محمد الخالد",
+        specialty: "تصميم وسائل التواصل الاجتماعي",
+        experience: "٣ سنوات",
+        bio: "خبير في إنشاء محتوى وسائل تواصل اجتماعي جذاب يحقق التحويلات.",
         portfolio: ["project4.jpg", "project5.jpg", "project6.jpg"],
-        avatar: "/avatars/mike.jpg",
+        avatar: "/avatars/mohammed.jpg",
         rating: 4.7
       },
       {
         id: 3,
-        name: "Emma Davis",
-        specialty: "Web Design",
-        experience: "6 years",
-        bio: "Passionate about creating user-centered web experiences that convert.",
+        name: "فاطمة العلي",
+        specialty: "تصميم الويب",
+        experience: "٦ سنوات",
+        bio: "شغوفة بإنشاء تجارب ويب تركز على المستخدم وتحقق التحويلات.",
         portfolio: ["project7.jpg", "project8.jpg", "project9.jpg"],
-        avatar: "/avatars/emma.jpg",
+        avatar: "/avatars/fatima.jpg",
         rating: 4.8
       }
     ];
@@ -62,8 +64,8 @@ const DesignerSelection = () => {
     <Container className="my-5">
       <Row className="text-center mb-5">
         <Col>
-          <h2>Choose Your Designer</h2>
-          <p className="lead">Select from our talented team of professional designers</p>
+          <h2>اختر المصمم الخاص بك</h2>
+          <p className="lead">اختر من بين فريقنا الموهوب من المصممين المحترفين</p>
         </Col>
       </Row>
       <DesignerGrid 

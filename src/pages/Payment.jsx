@@ -3,8 +3,12 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { processPayment, sendNotifications } from '../services/notifications';
+import { useEffect } from 'react';
 
 const Payment = () => {
+   useEffect(() => {
+    document.title = 'Vivora Agency - الدفع';
+  }, []);
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
@@ -15,14 +19,11 @@ const Payment = () => {
     setProcessing(true);
     
     try {
-      // Process payment
       const paymentResult = await processPayment(projectData);
       
       if (paymentResult.success) {
-        // Send notifications
         await sendNotifications(projectData);
         
-        // Save order to database
         const order = {
           id: Date.now(),
           ...projectData,
@@ -31,21 +32,19 @@ const Payment = () => {
           paymentId: paymentResult.paymentId
         };
         
-        // Save to localStorage (replace with API call in production)
         const existingOrders = JSON.parse(localStorage.getItem('userOrders') || '[]');
         localStorage.setItem('userOrders', JSON.stringify([...existingOrders, order]));
         
-        // Clear current project
         localStorage.removeItem('currentProject');
         
         navigate('/dashboard', { 
           state: { 
-            message: 'Payment successful! Your order has been placed.' 
+            message: 'تم الدفع بنجاح! تم تقديم طلبك.' 
           } 
         });
       }
     } catch (error) {
-      console.error('Payment failed:', error);
+      console.error('فشل الدفع:', error);
     } finally {
       setProcessing(false);
     }
@@ -56,24 +55,24 @@ const Payment = () => {
       <Row className="justify-content-center">
         <Col md={8}>
           <Card className="shadow">
-            <Card.Header className="bg-primary text-white">
-              <h4 className="mb-0">Payment</h4>
+            <Card.Header className="primary-bg secondary-text">
+              <h4 className="mb-0">الدفع</h4>
             </Card.Header>
             <Card.Body>
               <Alert variant="info">
-                <strong>Order Summary:</strong><br />
-                Project: {projectData.projectName}<br />
-                Package: {projectData.selectedPackage}<br />
-                Amount: $299.00
+                <strong>ملخص الطلب:</strong><br />
+                المشروع: {projectData.projectName}<br />
+                الباقة: {projectData.selectedPackage}<br />
+                المبلغ: ٢٩٩ ريال
               </Alert>
 
               <Form>
                 <Form.Group className="mb-4">
-                  <Form.Label>Select Payment Method</Form.Label>
+                  <Form.Label>اختر طريقة الدفع</Form.Label>
                   <div>
                     <Form.Check
                       type="radio"
-                      label="Credit/Debit Card"
+                      label="بطاقة ائتمان/مدى"
                       name="paymentMethod"
                       value="card"
                       checked={paymentMethod === 'card'}
@@ -82,7 +81,7 @@ const Payment = () => {
                     />
                     <Form.Check
                       type="radio"
-                      label="PayPal"
+                      label="باي بال"
                       name="paymentMethod"
                       value="paypal"
                       checked={paymentMethod === 'paypal'}
@@ -91,7 +90,7 @@ const Payment = () => {
                     />
                     <Form.Check
                       type="radio"
-                      label="Bank Transfer"
+                      label="تحويل بنكي"
                       name="paymentMethod"
                       value="bank"
                       checked={paymentMethod === 'bank'}
@@ -104,26 +103,26 @@ const Payment = () => {
                   <Row>
                     <Col md={12}>
                       <Form.Group className="mb-3">
-                        <Form.Label>Card Number</Form.Label>
-                        <Form.Control type="text" placeholder="1234 5678 9012 3456" />
+                        <Form.Label>رقم البطاقة</Form.Label>
+                        <Form.Control type="text" placeholder="١٢٣٤ ٥٦٧٨ ٩٠١٢ ٣٤٥٦" />
                       </Form.Group>
                     </Col>
                     <Col md={6}>
                       <Form.Group className="mb-3">
-                        <Form.Label>Expiry Date</Form.Label>
-                        <Form.Control type="text" placeholder="MM/YY" />
+                        <Form.Label>تاريخ الانتهاء</Form.Label>
+                        <Form.Control type="text" placeholder="شهر/سنة" />
                       </Form.Group>
                     </Col>
                     <Col md={6}>
                       <Form.Group className="mb-3">
                         <Form.Label>CVV</Form.Label>
-                        <Form.Control type="text" placeholder="123" />
+                        <Form.Control type="text" placeholder="١٢٣" />
                       </Form.Group>
                     </Col>
                     <Col md={12}>
                       <Form.Group className="mb-3">
-                        <Form.Label>Cardholder Name</Form.Label>
-                        <Form.Control type="text" placeholder="John Doe" />
+                        <Form.Label>اسم حامل البطاقة</Form.Label>
+                        <Form.Control type="text" placeholder="الاسم كما هو على البطاقة" />
                       </Form.Group>
                     </Col>
                   </Row>
@@ -136,7 +135,7 @@ const Payment = () => {
                     onClick={handlePayment}
                     disabled={processing}
                   >
-                    {processing ? 'Processing...' : `Pay $299.00`}
+                    {processing ? 'جاري المعالجة...' : `دفع ٢٩٩ ريال`}
                   </Button>
                 </div>
               </Form>

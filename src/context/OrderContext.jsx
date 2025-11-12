@@ -19,6 +19,11 @@ const orderReducer = (state, action) => {
             : order
         )
       };
+    case 'ADD_ORDER':
+      return {
+        ...state,
+        orders: [...state.orders, action.payload]
+      };
     default:
       return state;
   }
@@ -42,7 +47,7 @@ export const OrderProvider = ({ children }) => {
 export const useOrder = () => {
   const context = useContext(OrderContext);
   if (!context) {
-    throw new Error('useOrder must be used within an OrderProvider');
+    throw new Error('يجب استخدام useOrder داخل OrderProvider');
   }
   return context;
 };

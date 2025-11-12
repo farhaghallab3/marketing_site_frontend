@@ -1,27 +1,20 @@
 // src/services/notifications.js
 export const sendNotifications = async (projectData) => {
   try {
-    // Send confirmation email
     await sendConfirmationEmail(projectData);
-    
-    // Send WhatsApp notification
     await sendWhatsAppNotification(projectData);
-    
-    // Notify designer
     await notifyDesigner(projectData);
-    
     return { success: true };
   } catch (error) {
-    console.error('Notification error:', error);
+    console.error('خطأ في الإشعارات:', error);
     return { success: false, error };
   }
 };
 
 const sendConfirmationEmail = async (data) => {
-  // Integration with email service (SendGrid, Mailgun, etc.)
   const emailData = {
     to: data.email,
-    subject: 'Order Confirmation - Marketing Services',
+    subject: 'تأكيد الطلب - خدمات التصميم',
     template: 'order-confirmation',
     data: {
       name: data.name,
@@ -30,32 +23,26 @@ const sendConfirmationEmail = async (data) => {
     }
   };
   
-  // Mock implementation
-  console.log('Sending email:', emailData);
+  console.log('إرسال بريد إلكتروني:', emailData);
   return Promise.resolve();
 };
 
 const sendWhatsAppNotification = async (data) => {
-  // Integration with WhatsApp Business API or Twilio
-  const message = `Your order has been received and is currently under review. We will contact you soon.\n\nOrder Details:\nProject: ${data.projectName}\nOrder ID: ${Date.now()}\n\nReply with:\n1. Track order status\n2. Contact my designer\n3. Contact the marketer`;
+  const message = `تم استلام طلبك وهو قيد المراجعة حالياً. سنتواصل معك قريباً.\n\nتفاصيل الطلب:\nالمشروع: ${data.projectName}\nرقم الطلب: ${Date.now()}\n\nرد بـ:\n١. تتبع حالة الطلب\n٢. التواصل مع المصمم\n٣. التواصل مع المسوق`;
   
-  // Mock implementation
-  console.log('Sending WhatsApp to:', data.mobile, 'Message:', message);
+  console.log('إرسال واتساب إلى:', data.mobile, 'الرسالة:', message);
   return Promise.resolve();
 };
 
 const notifyDesigner = async (data) => {
-  // Notify the selected designer about new project
-  const designerMessage = `New project assigned:\nClient: ${data.name}\nProject: ${data.projectName}\nContact: ${data.mobile}`;
+  const designerMessage = `تم تعيين مشروع جديد:\nالعميل: ${data.name}\nالمشروع: ${data.projectName}\nالاتصال: ${data.mobile}`;
   
-  console.log('Notifying designer:', designerMessage);
+  console.log('إشعار المصمم:', designerMessage);
   return Promise.resolve();
 };
 
 export const processPayment = async (data) => {
-  // Integration with payment gateway (Stripe, PayPal, etc.)
   try {
-    // Mock payment processing
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     return {
@@ -64,6 +51,6 @@ export const processPayment = async (data) => {
       amount: 299.00
     };
   } catch (error) {
-    throw new Error('Payment processing failed');
+    throw new Error('فشل معالجة الدفع');
   }
 };

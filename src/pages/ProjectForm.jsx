@@ -1,9 +1,13 @@
 // src/pages/ProjectForm.jsx
-import React, { useState } from 'react';
+import React, { use, useState  } from 'react';
 import { Container, Form, Button, Row, Col, Card, Alert } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const ProjectForm = () => {
+  useEffect(() => {
+    document.title = 'تفاصيل المشروع - Vivora Agency';
+  }, []);
   const [formData, setFormData] = useState({
     name: '',
     mobile: '',
@@ -19,12 +23,12 @@ const ProjectForm = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.mobile.trim()) newErrors.mobile = 'Mobile number is required';
-    if (!formData.email.trim()) newErrors.email = 'Email is required';
-    if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
-    if (!formData.projectName.trim()) newErrors.projectName = 'Project name is required';
-    if (!formData.projectDescription.trim()) newErrors.projectDescription = 'Project description is required';
+    if (!formData.name.trim()) newErrors.name = 'الاسم مطلوب';
+    if (!formData.mobile.trim()) newErrors.mobile = 'رقم الجوال مطلوب';
+    if (!formData.email.trim()) newErrors.email = 'البريد الإلكتروني مطلوب';
+    if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'البريد الإلكتروني غير صالح';
+    if (!formData.projectName.trim()) newErrors.projectName = 'اسم المشروع مطلوب';
+    if (!formData.projectDescription.trim()) newErrors.projectDescription = 'وصف المشروع مطلوب';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -36,6 +40,13 @@ const ProjectForm = () => {
       ...prev,
       [name]: value
     }));
+
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: null
+      }));
+    }
   };
 
   const handleFileUpload = (e) => {
@@ -50,7 +61,6 @@ const ProjectForm = () => {
     e.preventDefault();
     
     if (validateForm()) {
-      // Save project data and proceed to payment
       const projectData = {
         ...formData,
         selectedPackage: location.state?.selectedPackage,
@@ -67,8 +77,8 @@ const ProjectForm = () => {
       <Row className="justify-content-center">
         <Col md={8}>
           <Card className="shadow">
-            <Card.Header className="bg-primary text-white">
-              <h4 className="mb-0">Project Details</h4>
+            <Card.Header className="primary-bg secondary-text">
+              <h4 className="mb-0">تفاصيل المشروع</h4>
             </Card.Header>
             <Card.Body>
               {errors.general && <Alert variant="danger">{errors.general}</Alert>}
@@ -77,7 +87,7 @@ const ProjectForm = () => {
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label>Full Name *</Form.Label>
+                      <Form.Label>الاسم الكامل *</Form.Label>
                       <Form.Control
                         type="text"
                         name="name"
@@ -85,6 +95,7 @@ const ProjectForm = () => {
                         onChange={handleInputChange}
                         isInvalid={!!errors.name}
                         required
+                        placeholder="أدخل اسمك الكامل"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.name}
@@ -93,7 +104,7 @@ const ProjectForm = () => {
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label>Mobile Number *</Form.Label>
+                      <Form.Label>رقم الجوال *</Form.Label>
                       <Form.Control
                         type="tel"
                         name="mobile"
@@ -101,6 +112,7 @@ const ProjectForm = () => {
                         onChange={handleInputChange}
                         isInvalid={!!errors.mobile}
                         required
+                        placeholder="+966 5X XXX XXXX"
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.mobile}
@@ -110,7 +122,7 @@ const ProjectForm = () => {
                 </Row>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Email Address *</Form.Label>
+                  <Form.Label>البريد الإلكتروني *</Form.Label>
                   <Form.Control
                     type="email"
                     name="email"
@@ -118,6 +130,7 @@ const ProjectForm = () => {
                     onChange={handleInputChange}
                     isInvalid={!!errors.email}
                     required
+                    placeholder="example@email.com"
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.email}
@@ -125,7 +138,7 @@ const ProjectForm = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Project Name *</Form.Label>
+                  <Form.Label>اسم المشروع *</Form.Label>
                   <Form.Control
                     type="text"
                     name="projectName"
@@ -133,6 +146,7 @@ const ProjectForm = () => {
                     onChange={handleInputChange}
                     isInvalid={!!errors.projectName}
                     required
+                    placeholder="أدخل اسم المشروع"
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.projectName}
@@ -140,7 +154,7 @@ const ProjectForm = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Project Description *</Form.Label>
+                  <Form.Label>وصف المشروع *</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={4}
@@ -149,6 +163,7 @@ const ProjectForm = () => {
                     onChange={handleInputChange}
                     isInvalid={!!errors.projectDescription}
                     required
+                    placeholder="صف مشروعك بالتفصيل والمتطلبات التي تريدها"
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.projectDescription}
@@ -156,7 +171,7 @@ const ProjectForm = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-4">
-                  <Form.Label>Upload Files (Optional)</Form.Label>
+                  <Form.Label>رفع الملفات (اختياري)</Form.Label>
                   <Form.Control
                     type="file"
                     multiple
@@ -164,13 +179,13 @@ const ProjectForm = () => {
                     accept=".jpg,.jpeg,.png,.pdf,.psd,.ai"
                   />
                   <Form.Text className="text-muted">
-                    You can upload reference images, documents, or other files (Max 10MB each)
+                    يمكنك رفع الصور المرجعية، المستندات، أو ملفات أخرى (الحد الأقصى 10MB لكل ملف)
                   </Form.Text>
                 </Form.Group>
 
                 <div className="d-grid">
                   <Button variant="primary" type="submit" size="lg">
-                    Proceed to Payment
+                    المتابعة للدفع
                   </Button>
                 </div>
               </Form>

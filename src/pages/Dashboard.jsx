@@ -7,12 +7,18 @@ const Dashboard = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Load user orders from localStorage
+    document.title = 'لوحة التحكم - Vivora Agency';
+  }, []);
+
+  useEffect(() => {
     const userOrders = JSON.parse(localStorage.getItem('userOrders') || '[]');
     setOrders(userOrders);
     
-    // In a real app, this would come from authentication context
-    setUser({ name: 'John Doe', email: 'john@example.com' });
+    setUser({ 
+      name: 'محمد أحمد', 
+      email: 'mohammed@example.com',
+      orderCount: userOrders.length
+    });
   }, []);
 
   const getStatusVariant = (status) => {
@@ -27,10 +33,10 @@ const Dashboard = () => {
 
   const getStatusText = (status) => {
     const texts = {
-      'under_review': 'Under Review',
-      'in_progress': 'In Progress',
-      'completed': 'Completed',
-      'delivered': 'Delivered'
+      'under_review': 'قيد المراجعة',
+      'in_progress': 'قيد التنفيذ',
+      'completed': 'مكتمل',
+      'delivered': 'تم التسليم'
     };
     return texts[status] || status;
   };
@@ -39,8 +45,8 @@ const Dashboard = () => {
     <Container className="my-5">
       <Row>
         <Col>
-          <h2>My Dashboard</h2>
-          <p className="lead">Track your orders and manage your projects</p>
+          <h2>لوحة التحكم</h2>
+          <p className="lead">تابع طلباتك وأدر مشاريعك</p>
         </Col>
       </Row>
 
@@ -48,24 +54,24 @@ const Dashboard = () => {
         <Col md={4}>
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>Active Orders</Card.Title>
-              <h3>{orders.filter(order => order.status !== 'delivered').length}</h3>
+              <Card.Title>الطلبات النشطة</Card.Title>
+              <h3 className="primary-text">{orders.filter(order => order.status !== 'delivered').length}</h3>
             </Card.Body>
           </Card>
         </Col>
         <Col md={4}>
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>Completed</Card.Title>
-              <h3>{orders.filter(order => order.status === 'delivered').length}</h3>
+              <Card.Title>المكتملة</Card.Title>
+              <h3 className="primary-text">{orders.filter(order => order.status === 'delivered').length}</h3>
             </Card.Body>
           </Card>
         </Col>
         <Col md={4}>
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>Total Spent</Card.Title>
-              <h3>${orders.length * 299}</h3>
+              <Card.Title>إجمالي الإنفاق</Card.Title>
+              <h3 className="primary-text">{orders.length * 299} ريال</h3>
             </Card.Body>
           </Card>
         </Col>
@@ -75,22 +81,22 @@ const Dashboard = () => {
         <Col>
           <Card>
             <Card.Header>
-              <h5 className="mb-0">My Orders</h5>
+              <h5 className="mb-0">طلباتي</h5>
             </Card.Header>
             <Card.Body>
               {orders.length === 0 ? (
                 <p className="text-center text-muted">
-                  You haven't placed any orders yet.
+                  لم تقم بوضع أي طلبات بعد.
                 </p>
               ) : (
                 <Table responsive>
                   <thead>
                     <tr>
-                      <th>Order ID</th>
-                      <th>Project Name</th>
-                      <th>Date</th>
-                      <th>Status</th>
-                      <th>Actions</th>
+                      <th>رقم الطلب</th>
+                      <th>اسم المشروع</th>
+                      <th>التاريخ</th>
+                      <th>الحالة</th>
+                      <th>الإجراءات</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -98,7 +104,7 @@ const Dashboard = () => {
                       <tr key={order.id}>
                         <td>#{order.id}</td>
                         <td>{order.projectName}</td>
-                        <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                        <td>{new Date(order.createdAt).toLocaleDateString('ar-SA')}</td>
                         <td>
                           <Badge bg={getStatusVariant(order.status)}>
                             {getStatusText(order.status)}
@@ -106,7 +112,7 @@ const Dashboard = () => {
                         </td>
                         <td>
                           <Button variant="outline-primary" size="sm">
-                            View Details
+                            عرض التفاصيل
                           </Button>
                         </td>
                       </tr>
@@ -118,6 +124,38 @@ const Dashboard = () => {
           </Card>
         </Col>
       </Row>
+
+      {orders.length > 0 && (
+        <Row className="mt-4">
+          <Col>
+            <Card>
+              <Card.Header>
+                <h5 className="mb-0">معلومات الحساب</h5>
+              </Card.Header>
+              <Card.Body>
+                <Row>
+                  <Col md={6}>
+                    <div className="mb-3">
+                      <strong>الاسم:</strong> {user?.name}
+                    </div>
+                    <div className="mb-3">
+                      <strong>البريد الإلكتروني:</strong> {user?.email}
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="mb-3">
+                      <strong>إجمالي الطلبات:</strong> {orders.length}
+                    </div>
+                    <div className="mb-3">
+                      <strong>العضو منذ:</strong> {new Date().toLocaleDateString('ar-SA')}
+                    </div>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 };

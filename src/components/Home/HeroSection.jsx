@@ -1,149 +1,123 @@
 // src/components/Home/HeroSection.jsx
-import React from 'react';
-import { Container, Row, Col, Button, Badge } from 'react-bootstrap';
+import React, { useEffect, useRef } from 'react';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const heroRef = useRef(null);
 
-  const handleGetStarted = () => {
-    // Scroll to packages section
-    const packagesSection = document.getElementById('packages-section');
-    if (packagesSection) {
-      packagesSection.scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in-up');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current);
     }
-  };
 
-  const handleViewPortfolio = () => {
-    navigate('/designers');
-  };
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className="hero-section">
+    <section className="hero-modern gradient-bg" ref={heroRef}>
+      <div className="hero-background">
+        <div className="floating-shapes">
+          <div className="shape shape-1 animate-float"></div>
+          <div className="shape shape-2 animate-float" style={{animationDelay: '1s'}}></div>
+          <div className="shape shape-3 animate-float" style={{animationDelay: '2s'}}></div>
+          <div className="shape shape-4 animate-float" style={{animationDelay: '1.5s'}}></div>
+        </div>
+      </div>
+      
       <Container>
-        <Row className="align-items-center min-vh-70">
-          <Col lg={6} className="text-center text-lg-start">
-            <Badge bg="light" text="dark" className="mb-3 px-3 py-2 rounded-pill">
-              🚀 Professional Marketing Solutions
-            </Badge>
+        <Row className="align-items-center min-vh-100">
+          <Col lg={6} className="hero-content">
+            <div className="hero-badge animate-fade-in-up">
+              <span>🚀 وكالة فيفورا للتصميم</span>
+            </div>
             
-            <h1 className="display-4 fw-bold mb-4">
-              Transform Your Brand With 
-              <span className="text-warning"> Expert Design</span>
+            <h1 className="hero-title animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+              إبداع بلا حدود 
+              <span className="text-primary"> لعلامتك التجارية</span>
             </h1>
             
-            <p className="lead mb-4 fs-5">
-              We create stunning visual identities that captivate your audience and drive results. 
-              From brand design to social media graphics, our team delivers excellence at every pixel.
+            <p className="hero-description animate-fade-in-up" style={{animationDelay: '0.4s'}}>
+              نصنع تجارب بصرية استثنائية تحول أفكارك إلى واقع ملموس. 
+              من التصميم الجرافيكي إلى الهويات البصرية المتكاملة، 
+              نقدم حلولاً إبداعية تلهم جمهورك وتحقق أهدافك.
             </p>
 
-            <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+            <div className="hero-actions animate-fade-in-up" style={{animationDelay: '0.6s'}}>
               <Button 
-                variant="warning" 
-                size="lg" 
-                className="px-4 py-2 fw-semibold"
-                onClick={handleGetStarted}
+                className="btn-primary-modern me-3 animate-pulse-slow"
+                onClick={() => navigate('/designers')}
+                size="lg"
               >
-                Get Started Today
+                ابدأ مشروعك
               </Button>
+              <Button 
+                className="btn-outline-modern"
+                onClick={() => document.getElementById('packages').scrollIntoView({ behavior: 'smooth' })}
+                size="lg"
+              >
+                استكشف الباقات
+              </Button>
+            </div>
+
+            <div className="hero-stats animate-fade-in-up" style={{animationDelay: '0.8s'}}>
+              <div className="stat-item">
+                <h3>٥٠٠+</h3>
+                <span>مشروع مكتمل</span>
+              </div>
+              <div className="stat-item">
+                <h3>٩٨٪</h3>
+                <span>رضا العملاء</span>
+              </div>
+              <div className="stat-item">
+                <h3>٤٨</h3>
+                <span>ساعة تسليم</span>
+              </div>
+            </div>
+          </Col>
+
+          <Col lg={6} className="hero-visual">
+            <div className="visual-container animate-fade-in-up" style={{animationDelay: '1s'}}>
+              <div className="main-visual">
+                <img 
+                  src="/logo.png" 
+                  alt="Vivora Agency" 
+                  className="agency-logo"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+                <div className="logo-placeholder">
+                  <span>Vivora</span>
+                </div>
+              </div>
               
-              <Button 
-                variant="outline-light" 
-                size="lg" 
-                className="px-4 py-2 fw-semibold"
-                onClick={handleViewPortfolio}
-              >
-                View Our Portfolio
-              </Button>
-            </div>
-
-            {/* Stats Section */}
-            <Row className="mt-5 pt-4 text-center text-sm-start">
-              <Col xs={4} className="border-end border-light">
-                <div className="text-white">
-                  <h3 className="fw-bold mb-1">500+</h3>
-                  <small className="text-light opacity-75">Projects Completed</small>
-                </div>
-              </Col>
-              <Col xs={4} className="border-end border-light">
-                <div className="text-white">
-                  <h3 className="fw-bold mb-1">98%</h3>
-                  <small className="text-light opacity-75">Client Satisfaction</small>
-                </div>
-              </Col>
-              <Col xs={4}>
-                <div className="text-white">
-                  <h3 className="fw-bold mb-1">24/7</h3>
-                  <small className="text-light opacity-75">Support Available</small>
-                </div>
-              </Col>
-            </Row>
-          </Col>
-
-          <Col lg={6} className="text-center mt-5 mt-lg-0">
-            <div className="position-relative">
-              {/* Hero Image/Illustration */}
-              <div className="hero-visual bg-light rounded-4 p-4 shadow-lg mx-auto">
-                <div className="d-flex justify-content-center align-items-center h-100">
-                  <div className="text-center text-dark">
-                    <div className="mb-3">
-                      <i className="bi bi-palette-fill display-1 text-primary"></i>
-                    </div>
-                    <h5 className="fw-bold">Visual Design Showcase</h5>
-                    <p className="text-muted mb-0">
-                      See how we transform ideas into stunning visuals
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Floating Elements */}
-                <div className="position-absolute top-0 start-0 mt-n3 ms-n3">
-                  <div className="bg-success rounded-circle p-2 shadow">
-                    <i className="bi bi-check-lg text-white"></i>
-                  </div>
-                </div>
-                <div className="position-absolute top-0 end-0 mt-n3 me-n3">
-                  <div className="bg-info rounded-circle p-2 shadow">
-                    <i className="bi bi-lightning-fill text-white"></i>
-                  </div>
-                </div>
-                <div className="position-absolute bottom-0 start-0 mb-n3 ms-n3">
-                  <div className="bg-warning rounded-circle p-2 shadow">
-                    <i className="bi bi-star-fill text-white"></i>
-                  </div>
-                </div>
+              <div className="floating-card card-1 animate-float">
+                <i className="bi bi-palette"></i>
+                <span>تصميم إبداعي</span>
               </div>
-
-              {/* Background Decoration */}
-              <div className="position-absolute top-50 start-0 translate-middle-y z-n1">
-                <div className="bg-primary bg-opacity-10 rounded-circle" style={{width: '300px', height: '300px'}}></div>
+              
+              <div className="floating-card card-2 animate-float" style={{animationDelay: '1s'}}>
+                <i className="bi bi-lightning"></i>
+                <span>تسليم سريع</span>
               </div>
-              <div className="position-absolute bottom-0 end-0 z-n1">
-                <div className="bg-warning bg-opacity-10 rounded-circle" style={{width: '200px', height: '200px'}}></div>
-              </div>
-            </div>
-          </Col>
-        </Row>
-
-        {/* Trust Badges */}
-        <Row className="mt-5 pt-5">
-          <Col className="text-center">
-            <p className="text-light opacity-75 mb-3">Trusted by leading companies</p>
-            <div className="d-flex flex-wrap justify-content-center gap-4 opacity-50">
-              <div className="trust-badge">
-                <i className="bi bi-google fs-3 text-light"></i>
-              </div>
-              <div className="trust-badge">
-                <i className="bi bi-meta fs-3 text-light"></i>
-              </div>
-              <div className="trust-badge">
-                <i className="bi bi-microsoft fs-3 text-light"></i>
-              </div>
-              <div className="trust-badge">
-                <i className="bi bi-amazon fs-3 text-light"></i>
-              </div>
-              <div className="trust-badge">
-                <i className="bi bi-spotify fs-3 text-light"></i>
+              
+              <div className="floating-card card-3 animate-float" style={{animationDelay: '2s'}}>
+                <i className="bi bi-star"></i>
+                <span>جودة عالية</span>
               </div>
             </div>
           </Col>
@@ -151,70 +125,223 @@ const HeroSection = () => {
       </Container>
 
       <style jsx>{`
-        .hero-section {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 100px 0 80px;
+        .hero-modern {
           position: relative;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          color: white;
           overflow: hidden;
         }
 
-        .min-vh-70 {
-          min-height: 70vh;
-        }
-
-        .hero-visual {
-          max-width: 500px;
-          height: 300px;
-          position: relative;
-          background: linear-gradient(145deg, #ffffff, #f8f9fa);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          backdrop-filter: blur(10px);
-        }
-
-        .trust-badge {
-          transition: all 0.3s ease;
-          padding: 10px;
-        }
-
-        .trust-badge:hover {
-          transform: translateY(-2px);
-          opacity: 1 !important;
-        }
-
-        .z-n1 {
+        .hero-background {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
           z-index: -1;
         }
 
-        /* Animation for floating elements */
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
+        .floating-shapes .shape {
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(209, 178, 138, 0.1);
         }
 
-        .position-absolute:nth-child(1) { animation: float 3s ease-in-out infinite; }
-        .position-absolute:nth-child(2) { animation: float 3s ease-in-out infinite 1s; }
-        .position-absolute:nth-child(3) { animation: float 3s ease-in-out infinite 2s; }
+        .shape-1 {
+          width: 200px;
+          height: 200px;
+          top: 10%;
+          right: 10%;
+        }
 
-        /* Responsive adjustments */
+        .shape-2 {
+          width: 150px;
+          height: 150px;
+          bottom: 20%;
+          left: 5%;
+        }
+
+        .shape-3 {
+          width: 100px;
+          height: 100px;
+          top: 50%;
+          right: 20%;
+        }
+
+        .shape-4 {
+          width: 80px;
+          height: 80px;
+          bottom: 10%;
+          right: 30%;
+        }
+
+        .hero-content {
+          position: relative;
+          z-index: 2;
+        }
+
+        .hero-badge {
+          display: inline-block;
+          background: rgba(209, 178, 138, 0.1);
+          border: 1px solid rgba(209, 178, 138, 0.3);
+          color: var(--primary);
+          padding: 8px 20px;
+          border-radius: 25px;
+          font-weight: 600;
+          margin-bottom: 2rem;
+          backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+          font-size: 3.5rem;
+          font-weight: 800;
+          line-height: 1.2;
+          margin-bottom: 1.5rem;
+          background: linear-gradient(135deg, white, var(--primary));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+          font-size: 1.2rem;
+          color: rgba(255, 255, 255, 0.8);
+          margin-bottom: 2.5rem;
+          line-height: 1.8;
+        }
+
+        .hero-actions {
+          margin-bottom: 3rem;
+        }
+
+        .hero-stats {
+          display: flex;
+          gap: 3rem;
+        }
+
+        .stat-item {
+          text-align: center;
+        }
+
+        .stat-item h3 {
+          font-size: 2.5rem;
+          font-weight: 700;
+          color: var(--primary);
+          margin-bottom: 0.5rem;
+        }
+
+        .stat-item span {
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 0.9rem;
+        }
+
+        .hero-visual {
+          position: relative;
+          z-index: 2;
+        }
+
+        .visual-container {
+          position: relative;
+          height: 500px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .main-visual {
+          width: 300px;
+          height: 300px;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+        }
+
+        .agency-logo {
+          width: 150px;
+          height: 150px;
+          border-radius: 20px;
+          object-fit: cover;
+        }
+
+        .logo-placeholder {
+          width: 150px;
+          height: 150px;
+          background: var(--primary);
+          border-radius: 20px;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          color: var(--secondary);
+          font-size: 2rem;
+          font-weight: 800;
+        }
+
+        .floating-card {
+          position: absolute;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 15px;
+          padding: 15px 20px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: white;
+          font-weight: 600;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .floating-card i {
+          color: var(--primary);
+          font-size: 1.2rem;
+        }
+
+        .card-1 {
+          top: 50px;
+          right: 50px;
+        }
+
+        .card-2 {
+          bottom: 80px;
+          left: 30px;
+        }
+
+        .card-3 {
+          top: 150px;
+          left: 80px;
+        }
+
         @media (max-width: 768px) {
-          .hero-section {
-            padding: 80px 0 60px;
-            text-align: center;
-          }
-          
-          .display-4 {
+          .hero-title {
             font-size: 2.5rem;
           }
-          
-          .hero-visual {
-            height: 250px;
-            margin-top: 2rem;
+
+          .hero-stats {
+            gap: 1.5rem;
           }
 
-          .border-end {
-            border-right: none !important;
-            margin-bottom: 1rem;
+          .stat-item h3 {
+            font-size: 2rem;
+          }
+
+          .visual-container {
+            height: 400px;
+          }
+
+          .main-visual {
+            width: 250px;
+            height: 250px;
+          }
+
+          .floating-card {
+            padding: 10px 15px;
+            font-size: 0.9rem;
           }
         }
       `}</style>

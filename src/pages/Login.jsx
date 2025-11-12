@@ -27,7 +27,9 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Redirect if already authenticated
+  useEffect(() => {
+    document.title = 'تسجيل الدخول - Vivora Agency';
+  }, []);
   useEffect(() => {
     if (isAuthenticated) {
       const from = location.state?.from || '/dashboard';
@@ -35,7 +37,6 @@ const Login = () => {
     }
   }, [isAuthenticated, navigate, location]);
 
-  // Clear errors when switching tabs
   useEffect(() => {
     clearError();
     setErrors({});
@@ -50,7 +51,6 @@ const Login = () => {
       }
     }));
 
-    // Clear field-specific error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -64,15 +64,15 @@ const Login = () => {
     const { email, password } = formData.login;
 
     if (!email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'البريد الإلكتروني مطلوب';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = 'البريد الإلكتروني غير صالح';
     }
 
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = 'كلمة المرور مطلوبة';
     } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
     }
 
     setErrors(newErrors);
@@ -84,37 +84,37 @@ const Login = () => {
     const { name, email, phone, password, confirmPassword, acceptTerms } = formData.register;
 
     if (!name.trim()) {
-      newErrors.name = 'Full name is required';
+      newErrors.name = 'الاسم الكامل مطلوب';
     }
 
     if (!email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'البريد الإلكتروني مطلوب';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = 'البريد الإلكتروني غير صالح';
     }
 
     if (!phone.trim()) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = 'رقم الجوال مطلوب';
     } else if (!/^\+?[\d\s-()]+$/.test(phone)) {
-      newErrors.phone = 'Phone number is invalid';
+      newErrors.phone = 'رقم الجوال غير صالح';
     }
 
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = 'كلمة المرور مطلوبة';
     } else if (password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+      newErrors.password = 'كلمة المرور يجب أن تكون 8 أحرف على الأقل';
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-      newErrors.password = 'Password must contain uppercase, lowercase, and numbers';
+      newErrors.password = 'يجب أن تحتوي كلمة المرور على أحرف كبيرة وصغيرة وأرقام';
     }
 
     if (!confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = 'يرجى تأكيد كلمة المرور';
     } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = 'كلمات المرور غير متطابقة';
     }
 
     if (!acceptTerms) {
-      newErrors.acceptTerms = 'You must accept the terms and conditions';
+      newErrors.acceptTerms = 'يجب الموافقة على الشروط والأحكام';
     }
 
     setErrors(newErrors);
@@ -132,13 +132,11 @@ const Login = () => {
 
     try {
       const result = await login(email, password);
-      if (result.success) {
-        // Navigation will be handled by the useEffect
-      } else {
+      if (!result.success) {
         setErrors({ general: result.error });
       }
     } catch (err) {
-      setErrors({ general: 'An unexpected error occurred' });
+      setErrors({ general: 'حدث خطأ غير متوقع' });
     } finally {
       setIsSubmitting(false);
     }
@@ -161,13 +159,11 @@ const Login = () => {
         password
       });
 
-      if (result.success) {
-        // Navigation will be handled by the useEffect
-      } else {
+      if (!result.success) {
         setErrors({ general: result.error });
       }
     } catch (err) {
-      setErrors({ general: 'An unexpected error occurred' });
+      setErrors({ general: 'حدث خطأ غير متوقع' });
     } finally {
       setIsSubmitting(false);
     }
@@ -182,7 +178,6 @@ const Login = () => {
       }
     }));
 
-    // Auto-submit after a brief delay to show the filled fields
     setTimeout(async () => {
       setIsSubmitting(true);
       await login('demo@example.com', 'password');
@@ -196,10 +191,10 @@ const Login = () => {
         <Row className="justify-content-center">
           <Col md={6}>
             <div className="text-center">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
+              <div className="spinner-border primary-text" role="status">
+                <span className="visually-hidden">جاري التحميل...</span>
               </div>
-              <p className="mt-3">Loading...</p>
+              <p className="mt-3">جاري التحميل...</p>
             </div>
           </Col>
         </Row>
@@ -211,32 +206,29 @@ const Login = () => {
     <Container className="my-5">
       <Row className="justify-content-center">
         <Col md={8} lg={6} xl={5}>
-          {/* Header */}
           <div className="text-center mb-5">
-            <h1 className="display-5 fw-bold text-primary mb-3">
-              Welcome Back
+            <h1 className="display-5 fw-bold primary-text mb-3">
+              أهلاً بعودتك
             </h1>
             <p className="text-muted">
-              Sign in to your account or create a new one to get started with our design services.
+              سجل الدخول إلى حسابك أو أنشئ حساباً جديداً لتبدأ مع خدماتنا التصميمية.
             </p>
           </div>
 
           <Card className="shadow-lg border-0">
             <Card.Body className="p-4">
-              {/* Tabs */}
               <Tabs
                 activeKey={activeTab}
                 onSelect={(tab) => setActiveTab(tab)}
                 className="mb-4 border-bottom-0"
                 justify
               >
-                <Tab eventKey="login" title="Sign In">
+                <Tab eventKey="login" title="تسجيل الدخول">
                   <div className="tab-content p-3">
-                    {/* Demo Account Alert */}
                     <Alert variant="info" className="d-flex align-items-center">
-                      <i className="bi bi-info-circle me-2"></i>
+                      <i className="bi bi-info-circle ms-2"></i>
                       <div>
-                        <strong>Demo Account:</strong> Use demo@example.com / password
+                        <strong>حساب تجريبي:</strong> استخدم demo@example.com / password
                         <Button
                           variant="outline-info"
                           size="sm"
@@ -244,32 +236,31 @@ const Login = () => {
                           onClick={handleDemoLogin}
                           disabled={isSubmitting}
                         >
-                          Auto-fill
+                          تعبئة تلقائية
                         </Button>
                       </div>
                     </Alert>
 
                     {error && (
                       <Alert variant="danger" dismissible onClose={clearError}>
-                        <i className="bi bi-exclamation-triangle me-2"></i>
+                        <i className="bi bi-exclamation-triangle ms-2"></i>
                         {error}
                       </Alert>
                     )}
 
                     {errors.general && (
                       <Alert variant="danger">
-                        <i className="bi bi-exclamation-triangle me-2"></i>
+                        <i className="bi bi-exclamation-triangle ms-2"></i>
                         {errors.general}
                       </Alert>
                     )}
 
                     <Form onSubmit={handleLogin}>
-                      {/* Email */}
                       <Form.Group className="mb-3">
-                        <Form.Label>Email Address</Form.Label>
+                        <Form.Label>البريد الإلكتروني</Form.Label>
                         <Form.Control
                           type="email"
-                          placeholder="Enter your email"
+                          placeholder="أدخل بريدك الإلكتروني"
                           value={formData.login.email}
                           onChange={(e) => handleInputChange('login', 'email', e.target.value)}
                           isInvalid={!!errors.email}
@@ -280,12 +271,11 @@ const Login = () => {
                         </Form.Control.Feedback>
                       </Form.Group>
 
-                      {/* Password */}
                       <Form.Group className="mb-4">
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label>كلمة المرور</Form.Label>
                         <Form.Control
                           type="password"
-                          placeholder="Enter your password"
+                          placeholder="أدخل كلمة المرور"
                           value={formData.login.password}
                           onChange={(e) => handleInputChange('login', 'password', e.target.value)}
                           isInvalid={!!errors.password}
@@ -294,14 +284,13 @@ const Login = () => {
                         <Form.Control.Feedback type="invalid">
                           {errors.password}
                         </Form.Control.Feedback>
-                        <div className="text-end mt-2">
+                        <div className="text-start mt-2">
                           <Link to="/forgot-password" className="text-decoration-none small">
-                            Forgot password?
+                            نسيت كلمة المرور؟
                           </Link>
                         </div>
                       </Form.Group>
 
-                      {/* Submit Button */}
                       <div className="d-grid">
                         <Button
                           variant="primary"
@@ -311,61 +300,54 @@ const Login = () => {
                         >
                           {isSubmitting ? (
                             <>
-                              <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                              Signing In...
+                              <span className="spinner-border spinner-border-sm ms-2" role="status"></span>
+                              جاري تسجيل الدخول...
                             </>
                           ) : (
                             <>
-                              <i className="bi bi-box-arrow-in-right me-2"></i>
-                              Sign In
+                              <i className="bi bi-box-arrow-in-left ms-2"></i>
+                              تسجيل الدخول
                             </>
                           )}
                         </Button>
                       </div>
                     </Form>
 
-                    {/* Divider */}
                     <div className="text-center my-4">
-                      <span className="text-muted">or continue with</span>
+                      <span className="text-muted">أو تابع باستخدام</span>
                     </div>
 
-                    {/* Social Login */}
                     <div className="d-grid gap-2">
                       <Button variant="outline-dark" disabled>
-                        <i className="bi bi-google me-2"></i>
-                        Continue with Google
-                      </Button>
-                      <Button variant="outline-primary" disabled>
-                        <i className="bi bi-facebook me-2"></i>
-                        Continue with Facebook
+                        <i className="bi bi-google ms-2"></i>
+                        المتابعة مع جوجل
                       </Button>
                     </div>
                   </div>
                 </Tab>
 
-                <Tab eventKey="register" title="Create Account">
+                <Tab eventKey="register" title="إنشاء حساب">
                   <div className="tab-content p-3">
                     {error && (
                       <Alert variant="danger" dismissible onClose={clearError}>
-                        <i className="bi bi-exclamation-triangle me-2"></i>
+                        <i className="bi bi-exclamation-triangle ms-2"></i>
                         {error}
                       </Alert>
                     )}
 
                     {errors.general && (
                       <Alert variant="danger">
-                        <i className="bi bi-exclamation-triangle me-2"></i>
+                        <i className="bi bi-exclamation-triangle ms-2"></i>
                         {errors.general}
                       </Alert>
                     )}
 
                     <Form onSubmit={handleRegister}>
-                      {/* Full Name */}
                       <Form.Group className="mb-3">
-                        <Form.Label>Full Name</Form.Label>
+                        <Form.Label>الاسم الكامل</Form.Label>
                         <Form.Control
                           type="text"
-                          placeholder="Enter your full name"
+                          placeholder="أدخل اسمك الكامل"
                           value={formData.register.name}
                           onChange={(e) => handleInputChange('register', 'name', e.target.value)}
                           isInvalid={!!errors.name}
@@ -376,12 +358,11 @@ const Login = () => {
                         </Form.Control.Feedback>
                       </Form.Group>
 
-                      {/* Email */}
                       <Form.Group className="mb-3">
-                        <Form.Label>Email Address</Form.Label>
+                        <Form.Label>البريد الإلكتروني</Form.Label>
                         <Form.Control
                           type="email"
-                          placeholder="Enter your email"
+                          placeholder="أدخل بريدك الإلكتروني"
                           value={formData.register.email}
                           onChange={(e) => handleInputChange('register', 'email', e.target.value)}
                           isInvalid={!!errors.email}
@@ -392,12 +373,11 @@ const Login = () => {
                         </Form.Control.Feedback>
                       </Form.Group>
 
-                      {/* Phone */}
                       <Form.Group className="mb-3">
-                        <Form.Label>Phone Number</Form.Label>
+                        <Form.Label>رقم الجوال</Form.Label>
                         <Form.Control
                           type="tel"
-                          placeholder="+1 (555) 123-4567"
+                          placeholder="+966 5X XXX XXXX"
                           value={formData.register.phone}
                           onChange={(e) => handleInputChange('register', 'phone', e.target.value)}
                           isInvalid={!!errors.phone}
@@ -408,12 +388,11 @@ const Login = () => {
                         </Form.Control.Feedback>
                       </Form.Group>
 
-                      {/* Password */}
                       <Form.Group className="mb-3">
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label>كلمة المرور</Form.Label>
                         <Form.Control
                           type="password"
-                          placeholder="Create a strong password"
+                          placeholder="أنشئ كلمة مرور قوية"
                           value={formData.register.password}
                           onChange={(e) => handleInputChange('register', 'password', e.target.value)}
                           isInvalid={!!errors.password}
@@ -423,16 +402,15 @@ const Login = () => {
                           {errors.password}
                         </Form.Control.Feedback>
                         <Form.Text className="text-muted">
-                          Must be at least 8 characters with uppercase, lowercase, and numbers.
+                          يجب أن تكون 8 أحرف على الأقل وتحتوي على أحرف كبيرة وصغيرة وأرقام.
                         </Form.Text>
                       </Form.Group>
 
-                      {/* Confirm Password */}
                       <Form.Group className="mb-4">
-                        <Form.Label>Confirm Password</Form.Label>
+                        <Form.Label>تأكيد كلمة المرور</Form.Label>
                         <Form.Control
                           type="password"
-                          placeholder="Confirm your password"
+                          placeholder="أعد إدخال كلمة المرور"
                           value={formData.register.confirmPassword}
                           onChange={(e) => handleInputChange('register', 'confirmPassword', e.target.value)}
                           isInvalid={!!errors.confirmPassword}
@@ -443,19 +421,18 @@ const Login = () => {
                         </Form.Control.Feedback>
                       </Form.Group>
 
-                      {/* Terms and Conditions */}
                       <Form.Group className="mb-4">
                         <Form.Check
                           type="checkbox"
                           label={
                             <span>
-                              I agree to the{' '}
+                              أوافق على{' '}
                               <Link to="/terms" className="text-decoration-none">
-                                Terms and Conditions
+                                الشروط والأحكام
                               </Link>{' '}
-                              and{' '}
+                              و{' '}
                               <Link to="/privacy" className="text-decoration-none">
-                                Privacy Policy
+                                سياسة الخصوصية
                               </Link>
                             </span>
                           }
@@ -468,7 +445,6 @@ const Login = () => {
                         </Form.Control.Feedback>
                       </Form.Group>
 
-                      {/* Submit Button */}
                       <div className="d-grid">
                         <Button
                           variant="warning"
@@ -478,13 +454,13 @@ const Login = () => {
                         >
                           {isSubmitting ? (
                             <>
-                              <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                              Creating Account...
+                              <span className="spinner-border spinner-border-sm ms-2" role="status"></span>
+                              جاري إنشاء الحساب...
                             </>
                           ) : (
                             <>
-                              <i className="bi bi-person-plus me-2"></i>
-                              Create Account
+                              <i className="bi bi-person-plus ms-2"></i>
+                              إنشاء حساب
                             </>
                           )}
                         </Button>
@@ -496,74 +472,16 @@ const Login = () => {
             </Card.Body>
           </Card>
 
-          {/* Additional Links */}
           <div className="text-center mt-4">
             <p className="text-muted">
-              By continuing, you agree to our{' '}
-              <Link to="/terms" className="text-decoration-none">Terms of Service</Link>
-              {' '}and{' '}
-              <Link to="/privacy" className="text-decoration-none">Privacy Policy</Link>.
+              بالمتابعة، فإنك توافق على{' '}
+              <Link to="/terms" className="text-decoration-none">شروط الخدمة</Link>
+              {' '}و{' '}
+              <Link to="/privacy" className="text-decoration-none">سياسة الخصوصية</Link>.
             </p>
           </div>
         </Col>
       </Row>
-
-      <style jsx>{`
-        .tab-content {
-          min-height: 400px;
-        }
-
-        .nav-tabs .nav-link {
-          border: none;
-          color: #6c757d;
-          font-weight: 500;
-          padding: 1rem 1.5rem;
-        }
-
-        .nav-tabs .nav-link.active {
-          color: var(--bs-primary);
-          background: transparent;
-          border-bottom: 3px solid var(--bs-primary);
-        }
-
-        .nav-tabs .nav-link:hover {
-          border: none;
-          border-bottom: 3px solid #dee2e6;
-        }
-
-        .card {
-          border-radius: 1rem;
-          overflow: hidden;
-        }
-
-        .form-control {
-          padding: 0.75rem 1rem;
-          border-radius: 0.5rem;
-        }
-
-        .btn {
-          border-radius: 0.5rem;
-          padding: 0.75rem 1.5rem;
-          font-weight: 500;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-          .my-5 {
-            margin-top: 2rem !important;
-            margin-bottom: 2rem !important;
-          }
-
-          .display-5 {
-            font-size: 2rem;
-          }
-
-          .nav-tabs .nav-link {
-            padding: 0.75rem 1rem;
-            font-size: 0.9rem;
-          }
-        }
-      `}</style>
     </Container>
   );
 };
