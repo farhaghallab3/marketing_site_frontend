@@ -1,0 +1,34 @@
+/* src/App.css */
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 100px 0;
+}
+
+.package-card {
+  transition: transform 0.3s ease;
+}
+
+.package-card:hover {
+  transform: translateY(-5px);
+}
+
+.designer-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.designer-card:hover {
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.status-badge {
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+}
